@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Kotlin_1728_2_1</string>
+    <string name="app_name">Simple Weather</string>
 
     <string name="temperature_label">Температура</string>
     <string name="feels_like_label">Ощущается как</string>
