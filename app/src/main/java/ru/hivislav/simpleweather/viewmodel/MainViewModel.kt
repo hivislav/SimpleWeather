@@ -15,20 +15,21 @@ class MainViewModel(private val liveData: MutableLiveData<AppState> = MutableLiv
         return liveData
     }
 
-    fun getWeatherFromServer() {
+    fun getWeatherFromLocalSourceRus() = getWeatherFromServer(true)
+
+    fun getWeatherFromLocalSourceWorld() = getWeatherFromServer(false)
+
+    fun getWeatherFromRemoteSource() = getWeatherFromServer(true)//заглушка
+
+    fun getWeatherFromServer(isRussian: Boolean) {
         liveData.postValue(AppState.Loading(0))
         Thread {
-            sleep(4000)
-            val rand = (1..40).random()
-            if (rand > 20) {
-                liveData.postValue(AppState.Success(repositoryImpl.getWeatherFromServer()))
+            sleep(2000)
+            if (isRussian) {
+                liveData.postValue(AppState.Success(repositoryImpl.getWeatherFromLocalStorageRus()))
             } else {
-                liveData.postValue(AppState.Error(IllegalStateException("")))
+                liveData.postValue(AppState.Success(repositoryImpl.getWeatherFromLocalStorageWorld()))
             }
         }.start()
-    }
-
-    fun getWeather() {
-        return getWeatherFromServer()
     }
 }

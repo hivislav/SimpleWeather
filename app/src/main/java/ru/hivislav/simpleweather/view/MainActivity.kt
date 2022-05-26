@@ -2,9 +2,9 @@ package ru.hivislav.simpleweather.view
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.view.LayoutInflater
 import ru.hivislav.simpleweather.R
 import ru.hivislav.simpleweather.databinding.ActivityMainBinding
+import ru.hivislav.simpleweather.view.main.MainFragment
 
 class MainActivity : AppCompatActivity() {
 
@@ -15,8 +15,10 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        supportFragmentManager.beginTransaction()
-            .add(R.id.container, MainFragment.newInstance())
-            .commit()
+        if (savedInstanceState == null) {
+            supportFragmentManager.beginTransaction()
+                .add(R.id.container, MainFragment.newInstance())
+                .commit()
+        }
     }
 }
