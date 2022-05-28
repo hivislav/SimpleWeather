@@ -1,11 +1,10 @@
 package ru.hivislav.simpleweather.view.details
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import ru.hivislav.simpleweather.R
+import androidx.fragment.app.Fragment
 import ru.hivislav.simpleweather.databinding.FragmentDetailsBinding
 import ru.hivislav.simpleweather.model.Weather
 
@@ -21,17 +20,18 @@ class DetailsFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         //Забираем погоду по ключу
-        val weather = arguments?.getParcelable<Weather>(DETAIL_FRAGMENT_BUNDLE_KEY)
-        if(weather != null){
-            setWeatherData(weather)
+        arguments?.let { it.getParcelable<Weather>(DETAIL_FRAGMENT_BUNDLE_KEY)
+            ?.run { setWeatherData(this) }
         }
     }
 
     private fun setWeatherData(weather: Weather) {
-        binding.cityName.text = weather.city.name
-        binding.cityCoordinates.text = "${weather.city.lat} ${weather.city.lon}"
-        binding.temperatureValue.text =  "${weather.temperature}"
-        binding.feelsLikeValue.text =  "${weather.feelsLike}"
+        with(binding) {
+        cityName.text = weather.city.name
+        cityCoordinates.text = "${weather.city.lat} ${weather.city.lon}"
+        temperatureValue.text = "${weather.temperature}"
+        feelsLikeValue.text = "${weather.feelsLike}"
+        }
     }
 
     override fun onCreateView(
@@ -48,10 +48,6 @@ class DetailsFragment : Fragment() {
     companion object {
         const val DETAIL_FRAGMENT_BUNDLE_KEY = "DETAIL_FRAGMENT_BUNDLE_KEY"
 
-        fun newInstance(bundle: Bundle): DetailsFragment{
-            val fragment = DetailsFragment()
-            fragment.arguments = bundle
-            return fragment
-        }
+        fun newInstance(bundle: Bundle) = DetailsFragment().apply { arguments = bundle }
     }
 }

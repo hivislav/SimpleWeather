@@ -1,10 +1,10 @@
 package ru.hivislav.simpleweather.view.main
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.snackbar.Snackbar
@@ -24,35 +24,21 @@ class MainFragment : Fragment(), OnItemClickListener {
     }
 
     private var isRussian = true
-    private lateinit var viewModel: MainViewModel
+
+    //Инициализируем ViewModel (провайдер возвращает уже имеющуюся, а если ее нет, то создает)
+    private val viewModel: MainViewModel by lazy {
+        ViewModelProvider(this).get(MainViewModel::class.java)
+    }
+
     private val mainAdapter = MainFragmentAdapter(this)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        //Инициализируем ViewModel (провайдер возвращает уже имеющуюся, а если ее нет, то создает)
-        viewModel = ViewModelProvider(this).get(MainViewModel::class.java)
+        initView()
         //Получаем LiveData и подписываемся на ее изменения
         viewModel.getLiveData().observe(viewLifecycleOwner, Observer<AppState>{renderData(it)})
-
-        binding.mainFragmentRecyclerView.adapter = mainAdapter
-
-        binding.mainFragmentFAB.setOnClickListener {
-            sendRequest()
-        }
-
         viewModel.getWeatherFromLocalSourceRus()
-    }
-
-    private fun sendRequest() {
-        isRussian = !isRussian
-        if (isRussian) {
-            viewModel.getWeatherFromLocalSourceRus()
-            binding.mainFragmentFAB.setImageResource(R.drawable.ic_russia)
-        } else {
-            viewModel.getWeatherFromLocalSourceWorld()
-            binding.mainFragmentFAB.setImageResource(R.drawable.ic_earth)
-        }
     }
 
     override fun onCreateView(
@@ -64,6 +50,24 @@ class MainFragment : Fragment(), OnItemClickListener {
     override fun onDestroy() {
         super.onDestroy()
         _binding = null
+    }
+
+    private fun initView() {
+        binding.mainFragmentRecyclerView.adapter = mainAdapter
+        binding.mainFragmentFAB.setOnClickListener {
+            sendRequest()
+        }
+    }
+
+    private fun sendRequest() {
+        isRussian = !isRussian
+        if (isRussian) {
+            viewModel.getWeatherFromLocalSourceRus()
+            binding.mainFragmentFAB.setImageResource(R.drawable.ic_russia)
+        } else {
+            viewModel.getWeatherFromLocalSourceWorld()
+            binding.mainFragmentFAB.setImageResource(R.drawable.ic_earth)
+        }
     }
 
     private fun renderData(appState: AppState) {

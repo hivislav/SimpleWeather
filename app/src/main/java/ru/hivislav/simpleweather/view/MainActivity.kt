@@ -1,7 +1,7 @@
 package ru.hivislav.simpleweather.view
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.appcompat.app.AppCompatActivity
 import ru.hivislav.simpleweather.R
 import ru.hivislav.simpleweather.databinding.ActivityMainBinding
 import ru.hivislav.simpleweather.view.main.MainFragment

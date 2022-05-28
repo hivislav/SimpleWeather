@@ -21,7 +21,7 @@ class MainViewModel(private val liveData: MutableLiveData<AppState> = MutableLiv
 
     fun getWeatherFromRemoteSource() = getWeatherFromServer(true)//заглушка
 
-    fun getWeatherFromServer(isRussian: Boolean) {
+    private fun getWeatherFromServer(isRussian: Boolean) {
         liveData.postValue(AppState.Loading(0))
         Thread {
             sleep(2000)
