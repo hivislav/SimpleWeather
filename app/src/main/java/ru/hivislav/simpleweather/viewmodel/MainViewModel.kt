@@ -1,6 +1,5 @@
 package ru.hivislav.simpleweather.viewmodel
 
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import ru.hivislav.simpleweather.model.repository.RepositoryImpl

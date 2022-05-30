@@ -10,8 +10,10 @@ import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.snackbar.Snackbar
 import ru.hivislav.simpleweather.databinding.FragmentDetailsBinding
 import ru.hivislav.simpleweather.model.entities.Weather
+import ru.hivislav.simpleweather.model.entities.getConditionOnRus
 import ru.hivislav.simpleweather.viewmodel.AppState
 import ru.hivislav.simpleweather.viewmodel.DetailsViewModel
+import java.util.*
 
 class DetailsFragment : Fragment() {
 
@@ -71,7 +73,9 @@ class DetailsFragment : Fragment() {
                 loadingLayout.visibility = View.GONE
                 mainView.visibility = View.VISIBLE
                 temperatureValue.text = appState.weatherData[0].temperature.toString()
-                feelsLikeValue.text = appState.weatherData[0].temperature.toString()
+                feelsLikeValue.text = appState.weatherData[0].feelsLike.toString()
+                conditionValue.text =
+                    getConditionOnRus(appState.weatherData[0].condition.toString())
             }
         }
     }

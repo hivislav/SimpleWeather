@@ -2,6 +2,7 @@ package ru.hivislav.simpleweather.model.entities
 
 import android.os.Parcelable
 import kotlinx.android.parcel.Parcelize
+import java.util.*
 
 @Parcelize
 data class Weather(
@@ -45,3 +46,38 @@ fun getRussianCities(): List<Weather> {
         Weather(City("Уфа", 54.7387621, 55.972055400000045), 19, 20)
     )
 }
+
+fun getConditionOnRus(condition: String): String {
+    return weatherTranslations[condition].toString().replaceFirstChar {
+        if (it.isLowerCase()) it.titlecase(
+            Locale.getDefault()
+        ) else it.toString()
+    }
+}
+
+val weatherTranslations = mapOf(
+    "clear" to "ясно",
+    "partly-cloudy" to "малооблачно",
+    "cloudy" to "облачно с прояснениями",
+    "overcast" to "пасмурно",
+    "drizzle" to "морось",
+    "light-rain" to "небольшой дождь",
+    "rain" to "дождь",
+    "moderate-rain" to "умеренно сильный дождь",
+    "heavy-rain" to "сильный дождь",
+    "continuous-heavy-rain" to "длительный сильный дождь",
+    "showers" to "ливень",
+    "wet-snow" to "дождь со снегом",
+    "light-snow" to "небольшой снег",
+    "snow" to "снег",
+    "snow-showers" to "снегопад",
+    "hail" to "град",
+    "thunderstorm" to "гроза",
+    "thunderstorm-with-rain" to "дождь с грозой",
+    "thunderstorm-with-hail" to "гроза с градом"
+)
+
+
+
+
+

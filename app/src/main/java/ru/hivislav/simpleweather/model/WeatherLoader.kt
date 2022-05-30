@@ -1,6 +1,7 @@
 package ru.hivislav.simpleweather.model
 
 import android.os.Build
+import android.util.Log
 import androidx.annotation.RequiresApi
 import com.google.gson.Gson
 import ru.hivislav.simpleweather.model.entities.rest_entities.WeatherDTO
@@ -14,7 +15,7 @@ import javax.net.ssl.HttpsURLConnection
 object WeatherLoader {
     //функция для загрузки данных
     fun loadWeather(lat: Double, lon: Double): WeatherDTO? {
-        val uri = URL("https://api.weather.yandex.ru/v2/informers?lat=$lat&lon=$lon")
+        val uri = URL("https://api.weather.yandex.ru/v2/informers?lat=$lat&lon=$lon&lang=ru_RU")
         //создаем соединение
         lateinit var urlConnection: HttpsURLConnection
 
@@ -38,6 +39,7 @@ object WeatherLoader {
             Gson().fromJson(lines, WeatherDTO::class.java)
         } catch (e: Exception) {
             e.printStackTrace()
+            Log.d("myLogs", "Нет доступа к сервису")
             null
         } finally {
             urlConnection.disconnect()
