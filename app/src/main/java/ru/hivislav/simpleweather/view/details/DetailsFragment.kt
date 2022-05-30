@@ -5,8 +5,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
+import com.google.android.material.snackbar.Snackbar
 import ru.hivislav.simpleweather.databinding.FragmentDetailsBinding
-import ru.hivislav.simpleweather.model.Weather
+import ru.hivislav.simpleweather.model.entities.Weather
+import ru.hivislav.simpleweather.viewmodel.AppState
+import ru.hivislav.simpleweather.viewmodel.DetailsViewModel
 
 class DetailsFragment : Fragment() {
 
@@ -16,28 +21,59 @@ class DetailsFragment : Fragment() {
             return _binding!!
         }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-
-        //Забираем погоду по ключу
-        arguments?.let { it.getParcelable<Weather>(DETAIL_FRAGMENT_BUNDLE_KEY)
-            ?.run { setWeatherData(this) }
-        }
-    }
-
-    private fun setWeatherData(weather: Weather) {
-        with(binding) {
-        cityName.text = weather.city.name
-        cityCoordinates.text = "${weather.city.lat} ${weather.city.lon}"
-        temperatureValue.text = "${weather.temperature}"
-        feelsLikeValue.text = "${weather.feelsLike}"
-        }
+    //Инициализируем ViewModel (провайдер возвращает уже имеющуюся, а если ее нет, то создает)
+    private val viewModel: DetailsViewModel by lazy {
+        ViewModelProvider(this).get(DetailsViewModel::class.java)
     }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         _binding = FragmentDetailsBinding.inflate(inflater, container, false)
         return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        //Забираем погоду по ключу
+        arguments?.getParcelable<Weather>(DETAIL_FRAGMENT_BUNDLE_KEY)?.let {
+                setStaticWeatherData(it)
+
+                viewModel.getLiveData().observe(viewLifecycleOwner,
+                            Observer<AppState> {appState: AppState ->  setDynamicWeatherData(appState)})
+                viewModel.loadData(it.city.lat, it.city.lon)
+        }
+    }
+
+    private fun setStaticWeatherData(weather: Weather) {
+        with(binding) {
+        cityName.text = weather.city.name
+        cityCoordinates.text = "${weather.city.lat} ${weather.city.lon}"
+        }
+    }
+
+    private fun setDynamicWeatherData(appState: AppState) = with(binding) {
+        when (appState) {
+            is AppState.Error -> {
+                mainView.visibility = View.INVISIBLE
+                loadingLayout.visibility = View.GONE
+                Snackbar.make(binding.root, "Error", Snackbar.LENGTH_LONG)
+                    .setAction("Попробовать еще раз") {
+                        viewModel.loadData(appState.weatherData[0].city.lat,
+                                            appState.weatherData[0].city.lon)
+                    }.show()
+            }
+            is AppState.Loading -> {
+                mainView.visibility = View.GONE
+                loadingLayout.visibility = View.VISIBLE
+            }
+            is AppState.Success -> {
+                loadingLayout.visibility = View.GONE
+                mainView.visibility = View.VISIBLE
+                temperatureValue.text = appState.weatherData[0].temperature.toString()
+                feelsLikeValue.text = appState.weatherData[0].temperature.toString()
+            }
+        }
     }
 
     override fun onDestroy() {

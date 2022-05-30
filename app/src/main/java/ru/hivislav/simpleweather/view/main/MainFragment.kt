@@ -10,7 +10,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.snackbar.Snackbar
 import ru.hivislav.simpleweather.R
 import ru.hivislav.simpleweather.databinding.FragmentMainBinding
-import ru.hivislav.simpleweather.model.Weather
+import ru.hivislav.simpleweather.model.entities.Weather
 import ru.hivislav.simpleweather.view.details.DetailsFragment
 import ru.hivislav.simpleweather.viewmodel.AppState
 import ru.hivislav.simpleweather.viewmodel.MainViewModel

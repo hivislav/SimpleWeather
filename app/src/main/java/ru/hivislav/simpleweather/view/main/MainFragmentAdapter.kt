@@ -6,7 +6,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import ru.hivislav.simpleweather.R
-import ru.hivislav.simpleweather.model.Weather
+import ru.hivislav.simpleweather.model.entities.Weather
 
 class MainFragmentAdapter(val listener: OnItemClickListener): RecyclerView.Adapter<MainFragmentAdapter.MainViewHolder>() {
 
