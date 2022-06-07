@@ -7,10 +7,13 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import coil.load
 import com.google.android.material.snackbar.Snackbar
 import ru.hivislav.simpleweather.databinding.FragmentDetailsBinding
 import ru.hivislav.simpleweather.model.entities.Weather
 import ru.hivislav.simpleweather.model.entities.getConditionOnRus
+import ru.hivislav.simpleweather.utils.YANDEX_ICON_URL
+import ru.hivislav.simpleweather.utils.loadUrl
 import ru.hivislav.simpleweather.viewmodel.AppStateDetails
 import ru.hivislav.simpleweather.viewmodel.AppStateMain
 import ru.hivislav.simpleweather.viewmodel.DetailsViewModel
@@ -46,7 +49,8 @@ class DetailsFragment : Fragment() {
                 setStaticWeatherData(it)
 
                 viewModel.getLiveData().observe(viewLifecycleOwner,
-                            Observer<AppStateDetails> { appStateDetails: AppStateDetails ->  setDynamicWeatherData(appStateDetails)})
+                            Observer<AppStateDetails> { appStateDetails: AppStateDetails ->
+                                setDynamicWeatherData(appStateDetails)})
                 viewModel.getWeatherFromRemoteServer(it.city.lat, it.city.lon)
         }
     }
@@ -79,6 +83,7 @@ class DetailsFragment : Fragment() {
                 feelsLikeValue.text = appStateDetails.weatherDTO.fact.feelsLike.toString()
                 conditionValue.text =
                     getConditionOnRus(appStateDetails.weatherDTO.fact.condition.toString())
+                iconWeather.loadUrl(YANDEX_ICON_URL + appStateDetails.weatherDTO.fact.icon + ".svg")
             }
         }
     }

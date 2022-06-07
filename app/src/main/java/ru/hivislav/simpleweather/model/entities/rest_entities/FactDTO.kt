@@ -6,5 +6,6 @@ data class FactDTO (
     val temp: Int?,
     @SerializedName("feels_like")
     val feelsLike: Int?,
-    val condition: String?
+    val condition: String?,
+    val icon: String? = "https://yastatic.net/weather/i/icons/funky/dark/ovc_+ra.svg"
 )

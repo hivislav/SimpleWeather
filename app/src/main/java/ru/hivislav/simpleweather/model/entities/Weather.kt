@@ -9,7 +9,8 @@ data class Weather(
     val city:City = getDefaultCity(),
     val temperature:Int = 20,
     val feelsLike:Int = 20,
-    val condition:String? = "default"
+    val condition:String? = "default",
+    val icon: String? = "https://yastatic.net/weather/i/icons/funky/dark/ovc_+ra.svg"
 ):Parcelable
 
 @Parcelize
