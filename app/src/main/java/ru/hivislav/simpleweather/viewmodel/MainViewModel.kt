@@ -5,11 +5,11 @@ import androidx.lifecycle.ViewModel
 import ru.hivislav.simpleweather.model.repository.RepositoryImpl
 import java.lang.Thread.sleep
 
-class MainViewModel(private val liveData: MutableLiveData<AppState> = MutableLiveData(),
+class MainViewModel(private val liveData: MutableLiveData<AppStateMain> = MutableLiveData(),
                     private val repositoryImpl: RepositoryImpl = RepositoryImpl()
 ) : ViewModel() {
 
-    fun getLiveData(): MutableLiveData<AppState> {
+    fun getLiveData(): MutableLiveData<AppStateMain> {
         return liveData
     }
 
@@ -17,16 +17,14 @@ class MainViewModel(private val liveData: MutableLiveData<AppState> = MutableLiv
 
     fun getWeatherFromLocalSourceWorld() = getWeatherFromServer(false)
 
-    fun getWeatherFromRemoteSource() = getWeatherFromServer(true)//заглушка
-
     private fun getWeatherFromServer(isRussian: Boolean) {
-        liveData.postValue(AppState.Loading(0))
+        liveData.postValue(AppStateMain.Loading(0))
         Thread {
             sleep(1000)
             if (isRussian) {
-                liveData.postValue(AppState.Success(repositoryImpl.getWeatherFromLocalStorageRus()))
+                liveData.postValue(AppStateMain.Success(repositoryImpl.getWeatherFromLocalStorageRus()))
             } else {
-                liveData.postValue(AppState.Success(repositoryImpl.getWeatherFromLocalStorageWorld()))
+                liveData.postValue(AppStateMain.Success(repositoryImpl.getWeatherFromLocalStorageWorld()))
             }
         }.start()
     }

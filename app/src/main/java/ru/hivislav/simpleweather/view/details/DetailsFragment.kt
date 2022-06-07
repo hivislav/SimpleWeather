@@ -11,9 +11,9 @@ import com.google.android.material.snackbar.Snackbar
 import ru.hivislav.simpleweather.databinding.FragmentDetailsBinding
 import ru.hivislav.simpleweather.model.entities.Weather
 import ru.hivislav.simpleweather.model.entities.getConditionOnRus
-import ru.hivislav.simpleweather.viewmodel.AppState
+import ru.hivislav.simpleweather.viewmodel.AppStateDetails
+import ru.hivislav.simpleweather.viewmodel.AppStateMain
 import ru.hivislav.simpleweather.viewmodel.DetailsViewModel
-import java.util.*
 
 class DetailsFragment : Fragment() {
 
@@ -28,6 +28,8 @@ class DetailsFragment : Fragment() {
         ViewModelProvider(this).get(DetailsViewModel::class.java)
     }
 
+    private lateinit var localWeather: Weather
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         _binding = FragmentDetailsBinding.inflate(inflater, container, false)
@@ -39,11 +41,13 @@ class DetailsFragment : Fragment() {
 
         //Забираем погоду по ключу
         arguments?.getParcelable<Weather>(DETAIL_FRAGMENT_BUNDLE_KEY)?.let {
+                localWeather = it
+
                 setStaticWeatherData(it)
 
                 viewModel.getLiveData().observe(viewLifecycleOwner,
-                            Observer<AppState> {appState: AppState ->  setDynamicWeatherData(appState)})
-                viewModel.loadData(it.city.lat, it.city.lon)
+                            Observer<AppStateDetails> { appStateDetails: AppStateDetails ->  setDynamicWeatherData(appStateDetails)})
+                viewModel.getWeatherFromRemoteServer(it.city.lat, it.city.lon)
         }
     }
 
@@ -54,28 +58,27 @@ class DetailsFragment : Fragment() {
         }
     }
 
-    private fun setDynamicWeatherData(appState: AppState) = with(binding) {
-        when (appState) {
-            is AppState.Error -> {
+    private fun setDynamicWeatherData(appStateDetails: AppStateDetails) = with(binding) {
+        when (appStateDetails) {
+            is AppStateDetails.Error -> {
                 mainView.visibility = View.INVISIBLE
                 loadingLayout.visibility = View.GONE
-                Snackbar.make(binding.root, "Error", Snackbar.LENGTH_LONG)
+                Snackbar.make(binding.root, appStateDetails.error.toString(), Snackbar.LENGTH_LONG)
                     .setAction("Попробовать еще раз") {
-                        viewModel.loadData(appState.weatherData[0].city.lat,
-                                            appState.weatherData[0].city.lon)
+                        viewModel.getWeatherFromRemoteServer(localWeather.city.lat, localWeather.city.lon)
                     }.show()
             }
-            is AppState.Loading -> {
+            is AppStateDetails.Loading -> {
                 mainView.visibility = View.GONE
                 loadingLayout.visibility = View.VISIBLE
             }
-            is AppState.Success -> {
+            is AppStateDetails.Success -> {
                 loadingLayout.visibility = View.GONE
                 mainView.visibility = View.VISIBLE
-                temperatureValue.text = appState.weatherData[0].temperature.toString()
-                feelsLikeValue.text = appState.weatherData[0].feelsLike.toString()
+                temperatureValue.text = appStateDetails.weatherDTO.fact.temp.toString()
+                feelsLikeValue.text = appStateDetails.weatherDTO.fact.feelsLike.toString()
                 conditionValue.text =
-                    getConditionOnRus(appState.weatherData[0].condition.toString())
+                    getConditionOnRus(appStateDetails.weatherDTO.fact.condition.toString())
             }
         }
     }

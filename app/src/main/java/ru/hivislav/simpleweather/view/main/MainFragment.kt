@@ -12,7 +12,7 @@ import ru.hivislav.simpleweather.R
 import ru.hivislav.simpleweather.databinding.FragmentMainBinding
 import ru.hivislav.simpleweather.model.entities.Weather
 import ru.hivislav.simpleweather.view.details.DetailsFragment
-import ru.hivislav.simpleweather.viewmodel.AppState
+import ru.hivislav.simpleweather.viewmodel.AppStateMain
 import ru.hivislav.simpleweather.viewmodel.MainViewModel
 
 class MainFragment : Fragment(), OnItemClickListener {
@@ -37,7 +37,7 @@ class MainFragment : Fragment(), OnItemClickListener {
 
         initView()
         //Получаем LiveData и подписываемся на ее изменения
-        viewModel.getLiveData().observe(viewLifecycleOwner, Observer<AppState>{renderData(it)})
+        viewModel.getLiveData().observe(viewLifecycleOwner, Observer<AppStateMain>{renderData(it)})
         viewModel.getWeatherFromLocalSourceRus()
     }
 
@@ -70,21 +70,21 @@ class MainFragment : Fragment(), OnItemClickListener {
         }
     }
 
-    private fun renderData(appState: AppState) {
-        when (appState) {
-            is AppState.Error -> {
+    private fun renderData(appStateMain: AppStateMain) {
+        when (appStateMain) {
+            is AppStateMain.Error -> {
                 binding.mainFragmentLoadingLayout.visibility = View.GONE
                 Snackbar.make(binding.root, "Error", Snackbar.LENGTH_LONG)
                     .setAction("Попробовать еще раз") {
                         sendRequest()
                     }.show()
             }
-            is AppState.Loading -> {
+            is AppStateMain.Loading -> {
                 binding.mainFragmentLoadingLayout.visibility = View.VISIBLE
             }
-            is AppState.Success -> {
+            is AppStateMain.Success -> {
                 binding.mainFragmentLoadingLayout.visibility = View.GONE
-                mainAdapter.setWeather(appState.weatherData)
+                mainAdapter.setWeather(appStateMain.weatherData)
                 Snackbar.make(binding.root, "Success", Snackbar.LENGTH_LONG).show()
             }
         }
