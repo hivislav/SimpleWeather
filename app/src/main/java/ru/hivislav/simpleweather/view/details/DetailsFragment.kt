@@ -2,6 +2,7 @@ package ru.hivislav.simpleweather.view.details
 
 import android.os.Bundle
 import android.view.LayoutInflater
+import android.view.Menu
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
@@ -9,6 +10,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import coil.load
 import com.google.android.material.snackbar.Snackbar
+import ru.hivislav.simpleweather.R
 import ru.hivislav.simpleweather.databinding.FragmentDetailsBinding
 import ru.hivislav.simpleweather.model.entities.Weather
 import ru.hivislav.simpleweather.model.entities.getConditionOnRus
@@ -41,6 +43,8 @@ class DetailsFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        setHasOptionsMenu(true)
 
         //Забираем погоду по ключу
         arguments?.getParcelable<Weather>(DETAIL_FRAGMENT_BUNDLE_KEY)?.let {
@@ -91,6 +95,11 @@ class DetailsFragment : Fragment() {
     override fun onDestroy() {
         super.onDestroy()
         _binding = null
+    }
+
+    override fun onPrepareOptionsMenu(menu: Menu) {
+        menu.findItem(R.id.menu_history).isVisible = false
+        super.onPrepareOptionsMenu(menu)
     }
 
     companion object {

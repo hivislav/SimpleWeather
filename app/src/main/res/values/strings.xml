@@ -10,5 +10,6 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="background_picture_on_details_fragment">background picture on details fragment</string>
     <string name="icon_weather_condition">icon weather condition</string>
+    <string name="menu_history">История запросов</string>
 
 </resources>

@@ -11,6 +11,7 @@ import ru.hivislav.simpleweather.R
 import ru.hivislav.simpleweather.databinding.FragmentMainBinding
 import ru.hivislav.simpleweather.model.entities.Weather
 import ru.hivislav.simpleweather.view.details.DetailsFragment
+import ru.hivislav.simpleweather.view.history.HistoryFragment
 import ru.hivislav.simpleweather.viewmodel.AppStateMain
 import ru.hivislav.simpleweather.viewmodel.MainViewModel
 
@@ -31,6 +32,12 @@ class MainFragment : Fragment(), OnItemClickListener {
 
     private val mainAdapter = MainFragmentAdapter(this)
 
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
+        _binding = FragmentMainBinding.inflate(inflater, container, false)
+        return binding.root
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -44,18 +51,13 @@ class MainFragment : Fragment(), OnItemClickListener {
         }
     }
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
-        _binding = FragmentMainBinding.inflate(inflater, container, false)
-        return binding.root
-    }
-
     override fun onDestroy() {
         super.onDestroy()
         _binding = null
     }
 
     private fun initView() {
+        setHasOptionsMenu(true)
         binding.mainFragmentRecyclerView.adapter = mainAdapter
         loadChooseCitiesList()
     }
@@ -124,7 +126,20 @@ class MainFragment : Fragment(), OnItemClickListener {
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.main_menu, menu)
         super.onCreateOptionsMenu(menu, inflater)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when(item.itemId) {
+            R.id.menu_history -> {
+                requireActivity().supportFragmentManager.beginTransaction()
+                    .add(R.id.container, HistoryFragment.newInstance())
+                    .addToBackStack("").commit()
+                true
+            }
+            else -> {false}
+        }
     }
 
     companion object {
