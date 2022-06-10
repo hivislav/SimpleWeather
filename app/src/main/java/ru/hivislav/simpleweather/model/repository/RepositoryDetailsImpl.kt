@@ -11,7 +11,7 @@ import ru.hivislav.simpleweather.model.entities.rest_entities.WeatherDTO
 import ru.hivislav.simpleweather.utils.YANDEX_API_KEY_VALUE
 import ru.hivislav.simpleweather.utils.YANDEX_API_URL
 
-class RepositoryImpl: Repository {
+class RepositoryDetailsImpl: RepositoryDetails {
     private val retrofit = Retrofit.Builder()
         .baseUrl(YANDEX_API_URL)
         .addConverterFactory(
@@ -25,8 +25,4 @@ class RepositoryImpl: Repository {
         //отправляем ассинхронный запрос
         retrofit.getWeather(YANDEX_API_KEY_VALUE, lat, lon).enqueue(callback)
     }
-
-    override fun getWeatherFromLocalStorageRus() = getRussianCities()
-
-    override fun getWeatherFromLocalStorageWorld() = getWorldCities()
 }

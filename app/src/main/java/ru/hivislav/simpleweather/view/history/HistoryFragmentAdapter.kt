@@ -39,7 +39,7 @@ class HistoryFragmentAdapter: RecyclerView.Adapter<HistoryFragmentAdapter.MainVi
             itemView.findViewById<TextView>(R.id.history_city_temperature).text = weather.temperature.toString()
             itemView.findViewById<TextView>(R.id.history_city_feels_like).text = weather.feelsLike.toString()
             itemView.findViewById<ImageView>(R.id.history_icon_weather_condition)
-                .loadUrl(YANDEX_ICON_URL + weather.icon + ".svg")
+                .loadUrl(weather.icon)
         }
     }
 }

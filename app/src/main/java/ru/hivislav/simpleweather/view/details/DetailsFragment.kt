@@ -8,7 +8,6 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import coil.load
 import com.google.android.material.snackbar.Snackbar
 import ru.hivislav.simpleweather.R
 import ru.hivislav.simpleweather.databinding.FragmentDetailsBinding
@@ -17,7 +16,6 @@ import ru.hivislav.simpleweather.model.entities.getConditionOnRus
 import ru.hivislav.simpleweather.utils.YANDEX_ICON_URL
 import ru.hivislav.simpleweather.utils.loadUrl
 import ru.hivislav.simpleweather.viewmodel.AppStateDetails
-import ru.hivislav.simpleweather.viewmodel.AppStateMain
 import ru.hivislav.simpleweather.viewmodel.DetailsViewModel
 
 class DetailsFragment : Fragment() {
@@ -88,6 +86,12 @@ class DetailsFragment : Fragment() {
                 conditionValue.text =
                     getConditionOnRus(appStateDetails.weatherDTO.fact.condition.toString())
                 iconWeather.loadUrl(YANDEX_ICON_URL + appStateDetails.weatherDTO.fact.icon + ".svg")
+                viewModel.saveWeather(Weather(localWeather.city,
+                    appStateDetails.weatherDTO.fact.temp,
+                    appStateDetails.weatherDTO.fact.feelsLike,
+                    "",
+                    YANDEX_ICON_URL + appStateDetails.weatherDTO.fact.icon + ".svg"
+                ))
             }
         }
     }

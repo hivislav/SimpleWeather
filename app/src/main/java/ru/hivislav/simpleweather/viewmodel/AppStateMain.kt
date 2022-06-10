@@ -1,7 +1,6 @@
 package ru.hivislav.simpleweather.viewmodel
 
 import ru.hivislav.simpleweather.model.entities.Weather
-import ru.hivislav.simpleweather.model.entities.rest_entities.WeatherDTO
 
 sealed class AppStateMain{
     data class Loading(val progress: Int): AppStateMain()

@@ -1,21 +1,21 @@
 package ru.hivislav.simpleweather.view.history
 
-import android.content.Context
 import android.os.Bundle
-import android.view.*
+import android.view.LayoutInflater
+import android.view.Menu
+import android.view.View
+import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.google.android.material.snackbar.Snackbar
 import ru.hivislav.simpleweather.R
 import ru.hivislav.simpleweather.databinding.FragmentHistoryBinding
 import ru.hivislav.simpleweather.model.entities.Weather
 import ru.hivislav.simpleweather.model.entities.getDefaultCity
-import ru.hivislav.simpleweather.view.details.DetailsFragment
-import ru.hivislav.simpleweather.view.main.MainFragment
-import ru.hivislav.simpleweather.view.main.MainFragmentAdapter
 import ru.hivislav.simpleweather.viewmodel.AppStateMain
+import ru.hivislav.simpleweather.viewmodel.HistoryViewModel
 import ru.hivislav.simpleweather.viewmodel.MainViewModel
 
 class HistoryFragment : Fragment() {
@@ -27,8 +27,8 @@ class HistoryFragment : Fragment() {
         }
 
     //Инициализируем ViewModel (провайдер возвращает уже имеющуюся, а если ее нет, то создает)
-    private val viewModel: MainViewModel by lazy {
-        ViewModelProvider(this).get(MainViewModel::class.java)
+    private val viewModel: HistoryViewModel by lazy {
+        ViewModelProvider(this).get(HistoryViewModel::class.java)
     }
 
     private val adapter = HistoryFragmentAdapter()
@@ -44,10 +44,28 @@ class HistoryFragment : Fragment() {
 
         setHasOptionsMenu(true)
 
+        viewModel.getLiveData().observe(viewLifecycleOwner, Observer<AppStateMain> { renderData(it) })
+        viewModel.getAllHistory()
+
         binding.historyFragmentRecyclerView.adapter = adapter
+        binding.historyFragmentRecyclerView.layoutManager =
+            LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
         binding.historyFragmentRecyclerView
-            .addItemDecoration(DividerItemDecoration(context, LinearLayoutManager.HORIZONTAL))
-        adapter.setHistoryWeather(listOf(Weather(getDefaultCity(), 10, 15, "", "")))
+            .addItemDecoration(DividerItemDecoration(context, LinearLayoutManager.VERTICAL))
+    }
+
+    private fun renderData(appState: AppStateMain) {
+        with(binding) {
+            when (appState) {
+                is AppStateMain.Error -> {
+                    // TODO
+                }
+                is AppStateMain.Loading -> {}
+                is AppStateMain.Success -> {
+                    adapter.setHistoryWeather(appState.weatherData)
+                }
+            }
+        }
     }
 
     override fun onDestroy() {

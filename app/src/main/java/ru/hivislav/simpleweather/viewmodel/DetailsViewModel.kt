@@ -5,11 +5,14 @@ import androidx.lifecycle.ViewModel
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import ru.hivislav.simpleweather.model.entities.Weather
 import ru.hivislav.simpleweather.model.entities.rest_entities.WeatherDTO
-import ru.hivislav.simpleweather.model.repository.RepositoryImpl
+import ru.hivislav.simpleweather.model.repository.RepositoryDetailsImpl
+import ru.hivislav.simpleweather.model.repository.RepositoryLocalImpl
 
 class DetailsViewModel(private val liveData: MutableLiveData<AppStateDetails> = MutableLiveData(),
-                       private val repositoryImpl: RepositoryImpl = RepositoryImpl()
+                       private val repositoryDetailsImpl: RepositoryDetailsImpl = RepositoryDetailsImpl(),
+                       private val repositoryLocalImpl: RepositoryLocalImpl = RepositoryLocalImpl()
 ) : ViewModel() {
 
     fun getLiveData(): MutableLiveData<AppStateDetails> {
@@ -18,7 +21,11 @@ class DetailsViewModel(private val liveData: MutableLiveData<AppStateDetails> = 
 
     fun getWeatherFromRemoteServer(lat: Double, lon: Double) {
         liveData.postValue(AppStateDetails.Loading(0))
-        repositoryImpl.getWeatherFromServer(lat, lon, callback)
+        repositoryDetailsImpl.getWeatherFromServer(lat, lon, callback)
+    }
+
+    fun saveWeather(weather: Weather){
+        repositoryLocalImpl.saveWeather(weather)
     }
 
     private val callback = object: Callback<WeatherDTO> {
