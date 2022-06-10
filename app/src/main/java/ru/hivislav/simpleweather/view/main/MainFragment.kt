@@ -1,9 +1,8 @@
 package ru.hivislav.simpleweather.view.main
 
+import android.content.Context
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -39,6 +38,10 @@ class MainFragment : Fragment(), OnItemClickListener {
         //Получаем LiveData и подписываемся на ее изменения
         viewModel.getLiveData().observe(viewLifecycleOwner, Observer<AppStateMain>{renderData(it)})
         viewModel.getWeatherFromLocalSourceRus()
+
+        binding.mainFragmentFAB.setOnClickListener {
+            sendRequestForChangeCitiesList()
+        }
     }
 
     override fun onCreateView(
@@ -54,13 +57,48 @@ class MainFragment : Fragment(), OnItemClickListener {
 
     private fun initView() {
         binding.mainFragmentRecyclerView.adapter = mainAdapter
-        binding.mainFragmentFAB.setOnClickListener {
-            sendRequest()
+        loadChooseCitiesList()
+    }
+
+    private fun renderData(appStateMain: AppStateMain) {
+        when (appStateMain) {
+            is AppStateMain.Error -> {
+                binding.mainFragmentLoadingLayout.visibility = View.GONE
+                Snackbar.make(binding.root, "Error", Snackbar.LENGTH_LONG)
+                    .setAction("Попробовать еще раз") {
+                        sendRequestForChangeCitiesList()
+                    }.show()
+            }
+            is AppStateMain.Loading -> {
+                binding.mainFragmentLoadingLayout.visibility = View.VISIBLE
+            }
+            is AppStateMain.Success -> {
+                binding.mainFragmentLoadingLayout.visibility = View.GONE
+                mainAdapter.setWeather(appStateMain.weatherData)
+                Snackbar.make(binding.root, "Success", Snackbar.LENGTH_SHORT).show()
+            }
         }
     }
 
-    private fun sendRequest() {
+    private fun sendRequestForChangeCitiesList() {
         isRussian = !isRussian
+        if (isRussian) {
+            viewModel.getWeatherFromLocalSourceRus()
+            binding.mainFragmentFAB.setImageResource(R.drawable.ic_russia)
+        } else {
+            viewModel.getWeatherFromLocalSourceWorld()
+            binding.mainFragmentFAB.setImageResource(R.drawable.ic_earth)
+        }
+        saveChooseCitiesList()
+    }
+
+    private fun loadChooseCitiesList() {
+        activity?.let {
+            isRussian = activity
+                ?.getPreferences(Context.MODE_PRIVATE)
+                ?.getBoolean(IS_RUSSIAN_CITIES_LIST, true)
+                ?: true
+        }
         if (isRussian) {
             viewModel.getWeatherFromLocalSourceRus()
             binding.mainFragmentFAB.setImageResource(R.drawable.ic_russia)
@@ -70,29 +108,11 @@ class MainFragment : Fragment(), OnItemClickListener {
         }
     }
 
-    private fun renderData(appStateMain: AppStateMain) {
-        when (appStateMain) {
-            is AppStateMain.Error -> {
-                binding.mainFragmentLoadingLayout.visibility = View.GONE
-                Snackbar.make(binding.root, "Error", Snackbar.LENGTH_LONG)
-                    .setAction("Попробовать еще раз") {
-                        sendRequest()
-                    }.show()
-            }
-            is AppStateMain.Loading -> {
-                binding.mainFragmentLoadingLayout.visibility = View.VISIBLE
-            }
-            is AppStateMain.Success -> {
-                binding.mainFragmentLoadingLayout.visibility = View.GONE
-                mainAdapter.setWeather(appStateMain.weatherData)
-                Snackbar.make(binding.root, "Success", Snackbar.LENGTH_LONG).show()
-            }
-        }
+    private fun saveChooseCitiesList() {
+        val sharedPreferences = activity?.getPreferences(Context.MODE_PRIVATE)?.edit()
+        sharedPreferences?.putBoolean(IS_RUSSIAN_CITIES_LIST, isRussian)
+        sharedPreferences?.apply()
     }
-
-    companion object {
-        fun newInstance() = MainFragment()
-        }
 
     //по клику парсим погоду и показываем детальный экран
     override fun onItemClick(weather: Weather) {
@@ -101,5 +121,15 @@ class MainFragment : Fragment(), OnItemClickListener {
         requireActivity().supportFragmentManager.beginTransaction()
             .add(R.id.container, DetailsFragment.newInstance(bundle))
             .addToBackStack("").commit()
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        super.onCreateOptionsMenu(menu, inflater)
+    }
+
+    companion object {
+        const val IS_RUSSIAN_CITIES_LIST = "isRussianCitiesList"
+
+        fun newInstance() = MainFragment()
     }
 }
