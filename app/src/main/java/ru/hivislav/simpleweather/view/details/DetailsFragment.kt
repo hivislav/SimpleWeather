@@ -86,7 +86,9 @@ class DetailsFragment : Fragment() {
                 conditionValue.text =
                     getConditionOnRus(appStateDetails.weatherDTO.fact.condition.toString())
                 iconWeather.loadUrl(YANDEX_ICON_URL + appStateDetails.weatherDTO.fact.icon + ".svg")
-                viewModel.saveWeather(Weather(localWeather.city,
+
+                viewModel.saveWeather(Weather(
+                    localWeather.city,
                     appStateDetails.weatherDTO.fact.temp,
                     appStateDetails.weatherDTO.fact.feelsLike,
                     "",

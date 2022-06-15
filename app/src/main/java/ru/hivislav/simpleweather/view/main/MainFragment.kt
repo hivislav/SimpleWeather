@@ -44,7 +44,6 @@ class MainFragment : Fragment(), OnItemClickListener {
         initView()
         //Получаем LiveData и подписываемся на ее изменения
         viewModel.getLiveData().observe(viewLifecycleOwner, Observer<AppStateMain>{renderData(it)})
-        viewModel.getWeatherFromLocalSourceRus()
 
         binding.mainFragmentFAB.setOnClickListener {
             sendRequestForChangeCitiesList()

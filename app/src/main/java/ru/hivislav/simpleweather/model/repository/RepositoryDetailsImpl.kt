@@ -5,8 +5,6 @@ import retrofit2.Callback
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import ru.hivislav.simpleweather.model.WeatherApi
-import ru.hivislav.simpleweather.model.entities.getRussianCities
-import ru.hivislav.simpleweather.model.entities.getWorldCities
 import ru.hivislav.simpleweather.model.entities.rest_entities.WeatherDTO
 import ru.hivislav.simpleweather.utils.YANDEX_API_KEY_VALUE
 import ru.hivislav.simpleweather.utils.YANDEX_API_URL

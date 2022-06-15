@@ -3,9 +3,11 @@ package ru.hivislav.simpleweather.viewmodel
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.isActive
+import kotlinx.coroutines.launch
 import ru.hivislav.simpleweather.model.repository.RepositoryLocalImpl
-import kotlinx.coroutines.*
-import java.util.logging.Handler
 
 
 class HistoryViewModel(private val liveData: MutableLiveData<AppStateMain> = MutableLiveData(),
@@ -17,7 +19,12 @@ class HistoryViewModel(private val liveData: MutableLiveData<AppStateMain> = Mut
 
     fun getAllHistory() {
         liveData.value = AppStateMain.Loading(0)
-        val listWeather = repositoryLocalImpl.getAllHistoryWeather()
-            liveData.postValue(AppStateMain.Success(listWeather))
+        viewModelScope.launch { (Dispatchers.Main)
+            val task = async(Dispatchers.IO){ repositoryLocalImpl.getAllHistoryWeather() }
+            val listWeather = task.await()
+            if (isActive) {
+                liveData.postValue(AppStateMain.Success(listWeather))
+            }
+        }
     }
 }

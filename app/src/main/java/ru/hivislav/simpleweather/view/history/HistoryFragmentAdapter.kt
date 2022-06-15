@@ -8,7 +8,6 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import ru.hivislav.simpleweather.R
 import ru.hivislav.simpleweather.model.entities.Weather
-import ru.hivislav.simpleweather.utils.YANDEX_ICON_URL
 import ru.hivislav.simpleweather.utils.loadUrl
 
 class HistoryFragmentAdapter: RecyclerView.Adapter<HistoryFragmentAdapter.MainViewHolder>() {

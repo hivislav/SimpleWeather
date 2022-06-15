@@ -12,11 +12,8 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import ru.hivislav.simpleweather.R
 import ru.hivislav.simpleweather.databinding.FragmentHistoryBinding
-import ru.hivislav.simpleweather.model.entities.Weather
-import ru.hivislav.simpleweather.model.entities.getDefaultCity
 import ru.hivislav.simpleweather.viewmodel.AppStateMain
 import ru.hivislav.simpleweather.viewmodel.HistoryViewModel
-import ru.hivislav.simpleweather.viewmodel.MainViewModel
 
 class HistoryFragment : Fragment() {
 

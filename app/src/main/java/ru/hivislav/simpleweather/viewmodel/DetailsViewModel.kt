@@ -2,6 +2,9 @@ package ru.hivislav.simpleweather.viewmodel
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -25,7 +28,9 @@ class DetailsViewModel(private val liveData: MutableLiveData<AppStateDetails> = 
     }
 
     fun saveWeather(weather: Weather){
-        repositoryLocalImpl.saveWeather(weather)
+        viewModelScope.launch(Dispatchers.IO) {
+            repositoryLocalImpl.saveWeather(weather)
+        }
     }
 
     private val callback = object: Callback<WeatherDTO> {
