@@ -3,10 +3,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="ru.hivislav.simpleweather">
 
-    <uses-permission android:name="android.permission.INTERNET"/>
-    <uses-permission android:name="android.permission.READ_CONTACTS"/>
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.READ_CONTACTS" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 
     <application
         android:name=".model.MyApp"
@@ -19,6 +19,11 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.SimpleWeather"
         tools:targetApi="31">
+
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyCJi6rnIGI2SqOCx2iIfPi3nazRvXd8IJ4" />
+
         <activity
             android:name=".view.MainActivity"
             android:exported="true">

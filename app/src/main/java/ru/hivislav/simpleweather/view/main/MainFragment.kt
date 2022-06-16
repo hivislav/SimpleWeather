@@ -25,6 +25,7 @@ import ru.hivislav.simpleweather.model.entities.Weather
 import ru.hivislav.simpleweather.view.contacts.ContactsFragment
 import ru.hivislav.simpleweather.view.details.DetailsFragment
 import ru.hivislav.simpleweather.view.history.HistoryFragment
+import ru.hivislav.simpleweather.view.maps.MapsFragment
 import ru.hivislav.simpleweather.viewmodel.AppStateMain
 import ru.hivislav.simpleweather.viewmodel.MainViewModel
 
@@ -161,6 +162,13 @@ class MainFragment : Fragment(), OnItemClickListener, CoroutineScope by MainScop
                     .addToBackStack("").commit()
                 true
             }
+
+            R.id.menu_map -> {
+                requireActivity().supportFragmentManager.beginTransaction()
+                    .add(R.id.container, MapsFragment.newInstance())
+                    .addToBackStack("").commit()
+                true
+            }
             else -> {false}
         }
     }
@@ -169,7 +177,7 @@ class MainFragment : Fragment(), OnItemClickListener, CoroutineScope by MainScop
     private fun checkPermission() {
         context?.let {
             when {
-                //если доступ к контактам есть
+                //если доступ к геолокации есть
                 ContextCompat.checkSelfPermission(it, Manifest.permission.ACCESS_FINE_LOCATION) ==
                         PackageManager.PERMISSION_GRANTED -> {
                     getLocation()
@@ -192,7 +200,7 @@ class MainFragment : Fragment(), OnItemClickListener, CoroutineScope by MainScop
         if (isGranted) {
             getLocation()
         } else {
-            Toast.makeText(context, "Нужно разрешение на доступ к геолокации", Toast.LENGTH_SHORT).show()
+            Toast.makeText(context, R.string.message_dialog_rationale_maps, Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -249,26 +257,26 @@ class MainFragment : Fragment(), OnItemClickListener, CoroutineScope by MainScop
 
     private fun showAddressDialog(address: String, location: Location) {
         AlertDialog.Builder(requireContext())
-            .setTitle("Ваш адрес")
+            .setTitle(R.string.title_dialog_address)
             .setMessage(address)
-            .setPositiveButton("Узнать погоду") { _, _ ->
+            .setPositiveButton(R.string.positive_button_dialog_address) { _, _ ->
                 openDetailsFragment(
                     Weather(City(address, location.latitude, location.longitude))
                 )
             }
-            .setNegativeButton("Закрыть") { dialog, _ -> dialog.dismiss() }
+            .setNegativeButton(R.string.negative_button_dialog_address) { dialog, _ -> dialog.dismiss() }
             .create()
             .show()
     }
 
     private fun showRationaleDialog() {
         AlertDialog.Builder(requireContext())
-            .setTitle("Доступ к геолокации")
-            .setMessage("Очень нужно, иначе дело плохо")
-            .setPositiveButton("Предоставить доступ") { _, _ ->
+            .setTitle(R.string.title_dialog_rationale_maps)
+            .setMessage(R.string.message_dialog_rationale_maps)
+            .setPositiveButton(R.string.positive_button_rationale_dialog) { _, _ ->
                 myRequestPermission()
             }
-            .setNegativeButton("Не надо") { dialog, _ -> dialog.dismiss() }
+            .setNegativeButton(R.string.negative_button_rationale_dialog) { dialog, _ -> dialog.dismiss() }
             .create()
             .show()
     }
