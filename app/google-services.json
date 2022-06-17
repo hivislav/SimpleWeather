@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "1033120193459",
+    "project_id": "simple-weather-e2b41",
+    "storage_bucket": "simple-weather-e2b41.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1033120193459:android:e0e25a69ecdf97091d09c6",
+        "android_client_info": {
+          "package_name": "ru.hivislav.simpleweather"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1033120193459-3qnkccv5jai6qpg65g05p24pr5iqg9jr.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCWr9-iMdYKpV5XUZk2Tj5YlueOm5SKlw4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1033120193459-3qnkccv5jai6qpg65g05p24pr5iqg9jr.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
