@@ -1,0 +1,28 @@
+<resources>
+    <string name="app_name">Simple Weather Demo</string>
+
+    <string name="temperature_label">Температура</string>
+    <string name="feels_like_label">Ощущается как</string>
+    <string name="city_coordinates">lt/ln: %s, %s"</string>
+    <string name="error">Error</string>
+    <string name="reload">Reload</string>
+
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="background_picture_on_details_fragment">background picture on details fragment</string>
+    <string name="icon_weather_condition">icon weather condition</string>
+    <string name="menu_history">История запросов</string>
+    <string name="menu_contacts">Контакты</string>
+    <string name="menu_map">Карта</string>
+
+    //Диалог рационализации доступов
+    <string name="title_dialog_rationale_maps">Доступ к местоположению</string>
+    <string name="message_dialog_rationale_maps">Необходимо получить разрешение на доступ к местоположению для работы с этим экраном</string>
+    <string name="positive_button_rationale_dialog">Предоставить доступ</string>
+    <string name="negative_button_rationale_dialog">Нет</string>
+
+    //Диалог с погодой по адресу
+    <string name="title_dialog_address">Ваш адрес</string>
+    <string name="positive_button_dialog_address">Узнать погоду</string>
+    <string name="negative_button_dialog_address">Закрыть</string>
+
+</resources>

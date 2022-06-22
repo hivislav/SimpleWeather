@@ -24,10 +24,28 @@ android {
         enabled = true
     }
 
+    signingConfigs {
+        release {
+            Properties properties = new Properties()
+            properties.load(rootProject.file("password.properties").newDataInputStream())
+            def password = properties.getProperty("password")
+            storeFile file("D:\\Geekbrains\\passApps\\simpleweather.jks")
+            storePassword = password
+            keyAlias 'simple_weather'
+            keyPassword =password
+        }
+    }
+
     buildTypes {
         release {
+            signingConfig signingConfigs.release
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+        demo {
+            initWith debug
+            minifyEnabled true
+            versionNameSuffix '.demo'
         }
     }
     compileOptions {
