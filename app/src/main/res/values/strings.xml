@@ -11,5 +11,6 @@
     <string name="background_picture_on_details_fragment">background picture on details fragment</string>
     <string name="icon_weather_condition">icon weather condition</string>
     <string name="menu_history">История запросов</string>
+    <string name="menu_contacts">Контакты</string>
 
 </resources>
