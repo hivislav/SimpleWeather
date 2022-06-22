@@ -8,8 +8,6 @@ import android.location.Geocoder
 import android.location.Location
 import android.location.LocationListener
 import android.location.LocationManager
-import androidx.fragment.app.Fragment
-
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -17,9 +15,8 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
-import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-
+import androidx.fragment.app.Fragment
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
@@ -29,8 +26,6 @@ import com.google.android.gms.maps.model.MarkerOptions
 import kotlinx.coroutines.*
 import ru.hivislav.simpleweather.R
 import ru.hivislav.simpleweather.databinding.FragmentGoogleMapsMainBinding
-import ru.hivislav.simpleweather.databinding.FragmentMapsBinding
-import ru.hivislav.simpleweather.view.main.MainFragment
 
 class MapsFragment : Fragment(), CoroutineScope by MainScope() {
 
@@ -165,7 +160,18 @@ class MapsFragment : Fragment(), CoroutineScope by MainScope() {
             if (ContextCompat.checkSelfPermission(it, Manifest.permission.ACCESS_FINE_LOCATION) ==
                 PackageManager.PERMISSION_GRANTED) {
                 //если выбранный провайдер включен вешаем слушатель
-                if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+                if (locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
+                    val providerGPS = locationManager.getProvider(LocationManager.NETWORK_PROVIDER)
+                    providerGPS?.let {
+                        locationManager.requestLocationUpdates(
+                            LocationManager.NETWORK_PROVIDER,
+                            0L,
+                            0f,
+                            locationListener
+                        )
+                    }
+
+                } else if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
                     val providerGPS = locationManager.getProvider(LocationManager.GPS_PROVIDER)
                     providerGPS?.let {
                         locationManager.requestLocationUpdates(
@@ -175,7 +181,9 @@ class MapsFragment : Fragment(), CoroutineScope by MainScope() {
                             locationListener
                         )
                     }
-                } else {
+                }
+
+                else {
                     val lastLocation = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER)
                     lastLocation?.let { location ->
                         getAddress(LatLng(location.latitude, location.longitude))
